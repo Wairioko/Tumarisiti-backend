@@ -4,16 +4,16 @@ import mongoose from 'mongoose';
 import dotenv from "dotenv";
 import express from 'express';
 import cors from 'cors'
+import cookieParser from 'cookie-parser';
+
+
 
 const app = express();
 dotenv.config();
 
-
-
 const connectDB = async (retries = 5) => {
     const mongoURI = process.env.MONGODB_URL || process.env.MONGODB_CLOUD_URL;
-    console.log("Attempting to connect to MongoDB:", mongoURI);
-
+    
     try {
         await mongoose.connect(mongoURI, {
             socketTimeoutMS: 45000,
@@ -38,16 +38,18 @@ connectDB().then(() => {
     app.use(express.json({ limit: '10mb' }));
     app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 
+    // CORS configuration
+    app.use(cors({
+        origin: 'http://localhost:3000', 
+        methods: 'GET,POST,PUT,DELETE,OPTIONS',
+        allowedHeaders: 'Content-Type,Authorization', 
+        credentials: true, 
+    }));
+
     // Use the imported routes
     app.use(InvoiceRoutes);
     app.use(UserRoutes);
-    app.use(cors({
-        origin: 'http://localhost:3000',  
-        methods: 'GET,POST,PUT,DELETE',
-        allowedHeaders: 'Content-Type,Authorization'
-    }));
-    
-    app.use(cors());
+    app.use(cookieParser());
 
     const PORT = process.env.PORT || 4000;
     app.listen(PORT, () => {
@@ -56,3 +58,5 @@ connectDB().then(() => {
 }).catch(err => {
     console.error("Error starting server:", err);
 });
+
+

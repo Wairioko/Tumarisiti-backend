@@ -26,6 +26,9 @@ const invoiceSchema = mongoose.Schema({
     invoiceStatus:{
         type: String,
         default: "Pending"
+    },
+    batchId:{
+        type: String
     }
 
 })

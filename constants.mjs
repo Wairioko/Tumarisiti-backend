@@ -4,5 +4,4 @@ export const getCookieConfig = () => ({
     secure: true,
     sameSite: 'None',
     path: '/',
-    // domain: process.env.COOKIE_DOMAIN  
   });

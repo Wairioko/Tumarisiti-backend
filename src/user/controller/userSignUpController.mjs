@@ -8,13 +8,13 @@ dotenv.config()
 
 export const companySignup = async (req, res) => {
     const {companyName, KRApin, email, password} = req.body;
-    console.log("the body", req.body)
+    
 
     if(!companyName || !KRApin || !email || !password){
         return res.status(400).send("Missing data required for registration. Please fill and try again")
     }
 
-    const saltRounds = bcrypt.genSalt(10);
+    const saltRounds = await bcrypt.genSaltSync(10);
     const hashedPassword = await bcrypt.hash(password, saltRounds);
 
     try{
@@ -27,11 +27,12 @@ export const companySignup = async (req, res) => {
         })
 
         await companyRecord.save()
-
-        res.status(201).send("Company registered successfully")
-        res.redirect('/company/confirmation')
+       
+        res.status(200).send("Company registered successfully")
+        
 
     }catch(error){
+        console.log("error creating company", error)
         return res.status(500).send("Server error creating company record")
     }
 

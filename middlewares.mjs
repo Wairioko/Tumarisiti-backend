@@ -1,27 +1,32 @@
 import jwt from "jsonwebtoken"
 import dotenv from "dotenv"
-import { companyModel } from "./src/user/model/userCompanyModel.mjs";
+
 
 dotenv.config()
 const jwtSecret = process.env.AuthTokenSecret;
 
-// function to verify jwt token
-export const verifyJWT = async (req, res) => {
-    const token = req.cookies.authToken;
-    if(!token){
-        return res.status(401).send("Unauthorised access. Please login to continue.")
+
+export const verifyJWT = (req, res, next) => {
+    try {
+        if (!req.cookies || !req.cookies.authToken) {
+            return res.status(401).json({ message: "Unauthorized, no token" });
+        }
+
+        const token = req.cookies.authToken;
+        const decoded = jwt.verify(token, jwtSecret);
+
+        
+        req.user = decoded.KRApin;
+
+        if (typeof next === "function") {
+            next(); 
+        } else {
+            console.error("Express 'next' function is not provided.");
+            return res.status(500).json({ message: "Server error: Middleware misconfigured" });
+        }
+    } catch (error) {
+        console.error("JWT Verification Error:", error);
+        return res.status(403).json({ message: "Invalid or expired token" });
     }
-
-    const verifyToken = jwt.verify(token,jwtSecret)
-    const companyPin = verifyToken.KRApin
-    const findUserCompanyId = companyModel.findOne({KRApin:companyPin})
-    if(!findUserCompanyId){
-        return res.status(404).send("User record not found. Please register to continue")
-    }
-    return findUserCompanyId
-
-}
-
-
-
+};
 

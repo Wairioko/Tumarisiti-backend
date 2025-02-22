@@ -6,6 +6,10 @@ const invoiceSchema = mongoose.Schema({
         type:String,
         required: true
     },
+    sellerName: {
+        type:String,
+        required: true
+    },
     invoiceNumber:{
         type:String,
         required: true

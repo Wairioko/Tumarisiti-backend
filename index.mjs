@@ -1,10 +1,12 @@
 import InvoiceRoutes from './src/invoices/routes/invoiceRoutes.mjs';
 import UserRoutes from './src/user/routes/companyRoutes.mjs';
+import DashboardRoutes from "./src/dashboard/routes/dashboardRoutes.mjs"
 import mongoose from 'mongoose';
 import dotenv from "dotenv";
 import express from 'express';
 import cors from 'cors'
 import cookieParser from 'cookie-parser';
+
 
 
 
@@ -32,7 +34,7 @@ const connectDB = async (retries = 5) => {
         throw error;
     }
 };
-
+app.use(cookieParser());
 // Connect to MongoDB
 connectDB().then(() => {
     app.use(express.json({ limit: '10mb' }));
@@ -49,7 +51,8 @@ connectDB().then(() => {
     // Use the imported routes
     app.use(InvoiceRoutes);
     app.use(UserRoutes);
-    app.use(cookieParser());
+    app.use(DashboardRoutes);
+    
 
     const PORT = process.env.PORT || 4000;
     app.listen(PORT, () => {

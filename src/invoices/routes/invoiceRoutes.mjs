@@ -1,5 +1,5 @@
 import Router from "express"
-import { createInvoice } from "../controller/createInvoice.mjs";
+import { createInvoice } from "../controller/uploadInvoice.mjs";
 import multer from "multer";
 import { deleteInvoice } from "../controller/deleteInvoice.mjs";
 import { editInvoice } from "../controller/editInvoice.mjs";

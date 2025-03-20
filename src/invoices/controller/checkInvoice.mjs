@@ -53,34 +53,35 @@ const sendEmailToSupplier = async (KRApin, invoiceNumber) => {
 
 
 
-export const checkInvoice = async (req, res) => {
-    const companyId = verifyJWT()
-    const findUserInvoices = invoiceModel.find({_id:companyId})
-    if(!findUserInvoices){
-        return res.status(404).send("Company has no invoice! Upload to proceed")
-    }
-    try{
-        const pendingInvoices = findUserInvoices.findOne({invoiceStatus:'Pending'});
+// export const checkInvoice = async (req, res) => {
+//     const companyPin = req.user;
+//     const findUserInvoices = await invoiceModel.find({KRApin: companyPin})
+//     if(!findUserInvoices){
+//         return res.status(404).send("Company has no invoice! Upload to proceed")
+//     }
+//     try{
+//         const pendingInvoices = findUserInvoices.findOne({invoiceStatus:'Pending'});
 
-        pendingInvoices.forEach((invoice) =>{
-            const invoiceNumber = invoiceModel.findOne({invoice})
-            const supplierKRAPin = invoiceNumber.sellerPin
-            const findInvoiceStatus = `${process.env.KRA_API_LINK}/${invoiceNumber}`
-            if(findInvoiceStatus.status === 200){
-                findUserInvoices.invoiceStatus['Transmittted']
-            }else if(findInvoiceStatus.status === 404){
-                findUserInvoices.invoiceStatus['Pending']
-                sendEmailToSupplier(supplierKRAPin, invoiceNumber)
-                res.status(404).send("Invoice not transmitted")
-            }
-        }
-    )
+//         pendingInvoices.forEach((invoice) =>{
+//             const invoiceNumber = invoiceModel.findOne({invoice})
+//             const supplierKRAPin = invoiceNumber.sellerPin
+//             const findInvoiceStatus = `${process.env.KRA_API_LINK}/${invoiceNumber}`
+//             if(findInvoiceStatus.status === 200){
+//                 findUserInvoices.invoiceStatus['Transmittted']
+//                 res.status()
+//             }else if(findInvoiceStatus.status === 404){
+//                 findUserInvoices.invoiceStatus['Pending']
+//                 sendEmailToSupplier(supplierKRAPin, invoiceNumber)
+//                 res.status(404).send("Invoice not transmitted")
+//             }
+//         }
+//     )
 
 
-    }catch(error){
-        console.error(error)
-        res.send(500).send("Error when transmitting invoice to KRA")
-    }
-}
+//     }catch(error){
+//         console.error(error)
+//         res.send(500).send("Error when transmitting invoice to KRA")
+//     }
+// }
 
 

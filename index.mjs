@@ -35,6 +35,15 @@ const connectDB = async (retries = 5) => {
     }
 };
 app.use(cookieParser());
+
+
+app.use((req, res, next) => {
+    console.log(`${req.method} ${req.url}`);
+    next();
+})
+
+
+
 // Connect to MongoDB
 connectDB().then(() => {
     app.use(express.json({ limit: '10mb' }));
